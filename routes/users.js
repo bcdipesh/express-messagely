@@ -1,16 +1,39 @@
+/** User route for message.ly */
+
+const express = require("express");
+const router = express.Router();
+const User = require("../models/user");
+const ExpressError = require("../expressError");
+
 /** GET / - get list of users.
  *
  * => {users: [{username, first_name, last_name, phone}, ...]}
  *
  **/
+router.get("/", async (req, res, next) => {
+  try {
+    const users = await User.all();
 
+    return res.json(users);
+  } catch (err) {
+    next(err);
+  }
+});
 
 /** GET /:username - get detail of users.
  *
  * => {user: {username, first_name, last_name, phone, join_at, last_login_at}}
  *
  **/
+router.get("/:username", async (req, res, next) => {
+  try {
+    const user = await User.get(req.params.username);
 
+    return res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
 
 /** GET /:username/to - get messages to user
  *
@@ -21,7 +44,15 @@
  *                 from_user: {username, first_name, last_name, phone}}, ...]}
  *
  **/
+router.get("/:username/to", async (req, res, next) => {
+  try {
+    const messages = await User.messagesTo(req.params.username);
 
+    return res.json(messages);
+  } catch (err) {
+    next(err);
+  }
+});
 
 /** GET /:username/from - get messages from user
  *
@@ -32,3 +63,12 @@
  *                 to_user: {username, first_name, last_name, phone}}, ...]}
  *
  **/
+router.get("/:username/from", async (req, res, next) => {
+  try {
+    const messages = await User.messagesFrom(req.params.username);
+
+    return res.json(messages);
+  } catch (err) {
+    next(err);
+  }
+});
