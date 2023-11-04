@@ -2,11 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-const {
-  authenticateJWT,
-  ensureLoggedIn,
-  ensureCorrectUser,
-} = require("../middleware/auth");
+const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 const User = require("../models/user");
 
 /** GET / - get list of users.
@@ -14,7 +10,7 @@ const User = require("../models/user");
  * => {users: [{username, first_name, last_name, phone}, ...]}
  *
  **/
-router.get("/", authenticateJWT, ensureLoggedIn, async (req, res, next) => {
+router.get("/", ensureLoggedIn, async (req, res, next) => {
   try {
     const users = await User.all();
 
@@ -31,7 +27,6 @@ router.get("/", authenticateJWT, ensureLoggedIn, async (req, res, next) => {
  **/
 router.get(
   "/:username",
-  authenticateJWT,
   ensureLoggedIn,
   ensureCorrectUser,
   async (req, res, next) => {
@@ -56,7 +51,6 @@ router.get(
  **/
 router.get(
   "/:username/to",
-  authenticateJWT,
   ensureLoggedIn,
   ensureCorrectUser,
   async (req, res, next) => {
@@ -81,7 +75,6 @@ router.get(
  **/
 router.get(
   "/:username/from",
-  authenticateJWT,
   ensureLoggedIn,
   ensureCorrectUser,
   async (req, res, next) => {
@@ -94,3 +87,5 @@ router.get(
     }
   }
 );
+
+module.exports = router;

@@ -93,7 +93,7 @@ class User {
       throw new ExpressError("User cannot be found", 404);
     }
 
-    const { username, first_name, last_name, phone, join_at, last_login_at } =
+    const { first_name, last_name, phone, join_at, last_login_at } =
       user.rows[0];
 
     return { username, first_name, last_name, phone, join_at, last_login_at };
