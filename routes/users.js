@@ -2,15 +2,19 @@
 
 const express = require("express");
 const router = express.Router();
+const {
+  authenticateJWT,
+  ensureLoggedIn,
+  ensureCorrectUser,
+} = require("../middleware/auth");
 const User = require("../models/user");
-const ExpressError = require("../expressError");
 
 /** GET / - get list of users.
  *
  * => {users: [{username, first_name, last_name, phone}, ...]}
  *
  **/
-router.get("/", async (req, res, next) => {
+router.get("/", authenticateJWT, ensureLoggedIn, async (req, res, next) => {
   try {
     const users = await User.all();
 
@@ -25,15 +29,21 @@ router.get("/", async (req, res, next) => {
  * => {user: {username, first_name, last_name, phone, join_at, last_login_at}}
  *
  **/
-router.get("/:username", async (req, res, next) => {
-  try {
-    const user = await User.get(req.params.username);
+router.get(
+  "/:username",
+  authenticateJWT,
+  ensureLoggedIn,
+  ensureCorrectUser,
+  async (req, res, next) => {
+    try {
+      const user = await User.get(req.params.username);
 
-    return res.json(user);
-  } catch (err) {
-    next(err);
+      return res.json(user);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 /** GET /:username/to - get messages to user
  *
@@ -44,15 +54,21 @@ router.get("/:username", async (req, res, next) => {
  *                 from_user: {username, first_name, last_name, phone}}, ...]}
  *
  **/
-router.get("/:username/to", async (req, res, next) => {
-  try {
-    const messages = await User.messagesTo(req.params.username);
+router.get(
+  "/:username/to",
+  authenticateJWT,
+  ensureLoggedIn,
+  ensureCorrectUser,
+  async (req, res, next) => {
+    try {
+      const messages = await User.messagesTo(req.params.username);
 
-    return res.json(messages);
-  } catch (err) {
-    next(err);
+      return res.json(messages);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 /** GET /:username/from - get messages from user
  *
@@ -63,12 +79,18 @@ router.get("/:username/to", async (req, res, next) => {
  *                 to_user: {username, first_name, last_name, phone}}, ...]}
  *
  **/
-router.get("/:username/from", async (req, res, next) => {
-  try {
-    const messages = await User.messagesFrom(req.params.username);
+router.get(
+  "/:username/from",
+  authenticateJWT,
+  ensureLoggedIn,
+  ensureCorrectUser,
+  async (req, res, next) => {
+    try {
+      const messages = await User.messagesFrom(req.params.username);
 
-    return res.json(messages);
-  } catch (err) {
-    next(err);
+      return res.json(messages);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
