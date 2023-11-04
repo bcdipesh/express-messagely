@@ -66,7 +66,7 @@ class User {
   static async all() {
     const users = await db.query(
       `SELECT username, first_name, last_name, phone
-      FROM user`
+      FROM users`
     );
 
     return users.rows;

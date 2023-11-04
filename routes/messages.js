@@ -71,9 +71,9 @@ router.post("/:id/read", ensureLoggedIn, async (req, res, next) => {
     const message = await Message.get(req.params.id);
 
     if (message.to_user.username === req.user.username) {
-      await Message.markRead(req.params.id);
+      const updatedMessage = await Message.markRead(req.params.id);
 
-      return res.status(200);
+      return res.status(200).json(updatedMessage);
     }
 
     throw new ExpressError("Unauthorized.", 401);
